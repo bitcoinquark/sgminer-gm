@@ -2052,7 +2052,7 @@ static bool __build_gbt_txns(struct pool *pool, json_t *res_val)
     quit(1, "Failed to calloc txn_hashes in __build_gbt_txns");
 
   if (pool->algorithm.type == ALGO_EQUIHASH) {
-    pool->coinbasetxn = realloc(pool->coinbasetxn, 1 << 22);  // reuse coinbasetxn
+	pool->coinbasetxn = static_cast<char *>(realloc(pool->coinbasetxn, 1 << 22));  // reuse coinbasetxn
     size_t len = 0;
     for (i = 0; i < pool->gbt_txns; i++) {
       json_t *array_elem = json_array_get(txn_array, i);
@@ -5409,7 +5409,7 @@ static void hashmeter(int thr_id, struct timeval *diff,
     double thread_rolling = 0.0;
     int i;
 
-    applog(LOG_DEBUG, "[thread %d: %"PRIu64" hashes, %.5g khash/sec]",
+    applog(LOG_DEBUG, "[thread %d: %" PRIu64" hashes, %.5g khash/sec]",
       thr_id, hashes_done, hashes_done / 1000. / secs);
 
     /* Rolling average for each thread and each device */
@@ -6674,7 +6674,7 @@ static void gen_stratum_work_equihash(struct pool *pool, struct work *work)
 
     header = bin2hex(work->equihash_data, 143);
     applog(LOG_DEBUG, "[THR%d] Generated stratum header %s", work->thr_id, header);
-    applog(LOG_DEBUG, "[THR%d] job_id %s, nonce1 %s, nonce2 %"PRIu64", ntime %s", work->thr_id, work->job_id, work->nonce1, work->nonce2, work->ntime);
+    applog(LOG_DEBUG, "[THR%d] job_id %s, nonce1 %s, nonce2 %" PRIu64", ntime %s", work->thr_id, work->job_id, work->nonce1, work->nonce2, work->ntime);
     free(header);
   }
 
@@ -6787,7 +6787,7 @@ static void gen_stratum_work(struct pool *pool, struct work *work)
     merkle_hash = bin2hex((const unsigned char *)merkle_root, 32);
     applog(LOG_DEBUG, "[THR%d] Generated stratum merkle %s", work->thr_id, merkle_hash);
     applog(LOG_DEBUG, "[THR%d] Generated stratum header %s", work->thr_id, header);
-    applog(LOG_DEBUG, "[THR%d] Work job_id %s nonce2 %"PRIu64" ntime %s", work->thr_id, work->job_id,
+    applog(LOG_DEBUG, "[THR%d] Work job_id %s nonce2 %" PRIu64" ntime %s", work->thr_id, work->job_id,
            work->nonce2, work->ntime);
     free(header);
     free(merkle_hash);

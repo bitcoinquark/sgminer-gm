@@ -1,6 +1,10 @@
 #include <stdint.h>
 #include <stdbool.h>
+#ifndef WIN32
 #include <dirent.h>
+#else
+#include "dirent.h"
+#endif
 
 #include "miner.h"
 #include "pptable_v1_0.h"
